@@ -38,7 +38,7 @@ public class Main {
 		if(rs.next()) {			
 			String dbId = rs.getString("ID");
 			String dbPwd = rs.getString("PWD");
-			System.out.println("로그인에 성공하였습니다.");
+			System.out.println("로그인에 성공하였습니다."+dbId+"님 환영합니다");
 		}else {
 			System.out.println("로그인에 실패하였습니다.");
 		}

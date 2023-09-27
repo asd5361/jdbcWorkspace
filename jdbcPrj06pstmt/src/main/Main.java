@@ -36,6 +36,8 @@ public class Main {
 			int result = pstmt.executeUpdate();
 			if(result >0) {
 				System.out.println("회원가입 성공");
+			}else {
+				System.out.println("회원가입 실패");
 			}
 			
 			//결과 처리
