@@ -117,28 +117,6 @@ public class MemberController {
 			default : System.out.println("다시 입력하세요");
 		}
 	}
-	public void update() {
-		//데이터 준비
-		System.out.print("ID :");
-		String userId = sc.nextLine();
-		System.out.print("PWD :");
-		String userPwd = sc.nextLine();
-		
-//		System.out.print("수정할 비밀번호 입력:");
-//		String newUserPwd = sc.nextLine();
-		
-		try {
-			//서비스 호출
-			int result = ms.update();
-			
-			//결과처리
-			
-		}catch(Exception e) {
-			System.out.println("업데이트 실패");
-			e.printStackTrace();
-		}
-		
-	}
 	
 	
 }
