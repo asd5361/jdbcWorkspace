@@ -1,5 +1,6 @@
 package com.kh.app.member.controller;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.kh.app.member.service.MemberService;
@@ -56,11 +57,33 @@ public class MemberController {
 	
 	//로그인
 	public void login() {
+		System.out.println("로그인===");
 		//데이터
+		System.out.print("ID : ");
+		String id = sc.nextLine();
+		System.out.print("PWD : ");
+		String pwd = sc.nextLine();
 		
-		//서비스
+		MemberVo vo = new MemberVo();
+		vo.setId(id);
+		vo.setPwd(pwd);
 		
-		//결과
+		try {
+			
+			//서비스
+			ArrayList<MemberVo> voList = ms.login(vo);
+			//결과
+
+			if(voList.get(1) != null) {
+				System.out.println("님 환영합니다. 로그인 성공");				
+			}else {
+				throw new Exception();
+			}
+			
+		}catch(Exception e) {
+			System.out.println("로그인 실패");
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -107,6 +130,8 @@ public class MemberController {
 	
 	//비밀번호 변경
 	public void editPwd() {
+		System.out.println("패스워드 변경===");
+		
 		//데이터
 		System.out.print("ID : ");
 		String id = sc.nextLine();
@@ -121,7 +146,7 @@ public class MemberController {
 		vo.setNick(newPwd);
 		try {
 			//서비스
-			int result = ms.editPwd(null, newPwd);
+			int result = ms.editPwd(vo, newPwd);
 			//결과
 			if(result == 1) {
 				System.out.println("비밀번호 변경 성공");

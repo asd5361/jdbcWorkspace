@@ -36,17 +36,20 @@ public class MemberService {
 	}
 	
 	//로그인
-	public ArrayList<MemberVo> login() {
-		//conn
-		//DAO
-		//tx
-		//close
-		//conn
-		//DAO
-		//tx
-		//close
+	public ArrayList<MemberVo> login(MemberVo vo) throws Exception{
 		
-		return null;
+		//conn
+		Connection conn = JDBCTemplate.getConnetion();
+		
+		//DAO
+		ArrayList<MemberVo> voList = dao.login(conn,vo);
+		
+		//tx
+		
+		//close
+		JDBCTemplate.close(conn);
+		
+		return voList;
 	}
 	
 	//전체 회원목록 조회
@@ -80,13 +83,21 @@ public class MemberService {
 	}
 	
 	//비밀번호 변경
-	public int editPwd(MemberVo vo, String newPwd) {
+	public int editPwd(MemberVo vo, String newPwd) throws Exception {
 		//conn
+		Connection conn = JDBCTemplate.getConnetion();
 		//DAO
+		int result = dao.editPwd(conn,vo,newPwd);
 		//tx
+		if(result == 1) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
 		//close
+		JDBCTemplate.close(conn);
 		
-		return 0;
+		return result;
 	}
 	
 }
