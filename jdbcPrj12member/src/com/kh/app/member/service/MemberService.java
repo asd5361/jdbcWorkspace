@@ -17,6 +17,7 @@ public class MemberService {
 
 	//회원가입
 	public int join(MemberVo vo) throws Exception {
+		
 		//conn
 		Connection conn = JDBCTemplate.getConnetion();
 		
@@ -53,13 +54,20 @@ public class MemberService {
 	}
 	
 	//전체 회원목록 조회
-	public ArrayList<MemberVo> getMemberList(){
-		//conn
-		//DAO
-		//tx
-		//close
+	public ArrayList<MemberVo> getMemberList() throws Exception{
 		
-		return null;
+		//conn
+		Connection conn =JDBCTemplate.getConnetion();
+		
+		//DAO
+		ArrayList<MemberVo> voList =dao.getMemberList(conn);
+		
+		//tx
+		
+		//close
+		JDBCTemplate.close(conn);
+		
+		return voList;
 	}
 	
 	//회원탈퇴
@@ -76,6 +84,7 @@ public class MemberService {
 		}else {
 			JDBCTemplate.rollback(conn);
 		}
+		
 		//close
 		JDBCTemplate.close(conn);
 		
@@ -84,16 +93,20 @@ public class MemberService {
 	
 	//비밀번호 변경
 	public int editPwd(MemberVo vo, String newPwd) throws Exception {
+		
 		//conn
 		Connection conn = JDBCTemplate.getConnetion();
+		
 		//DAO
 		int result = dao.editPwd(conn,vo,newPwd);
+		
 		//tx
 		if(result == 1) {
 			JDBCTemplate.commit(conn);
 		}else {
 			JDBCTemplate.rollback(conn);
 		}
+		
 		//close
 		JDBCTemplate.close(conn);
 		

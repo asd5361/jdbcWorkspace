@@ -19,6 +19,16 @@ public class MemberController {
 
 	//메뉴선택
 	public void MemberMenu() {
+		System.out.println("<입력하세요>\n1:회원가입\n2:로그인\n3:전체회원조회\n4:회원탈퇴\n5:비밀번호변경");
+		String n = sc.nextLine();
+		switch(n) {
+		case "1" : join(); break;
+		case "2" : login();break;
+		case "3" : printMemberList();break;
+		case "4" : quit();break;
+		case "5" : editPwd();break;
+		default : System.out.println("다시 입력하세요");
+		}
 	}
 	
 	//회원가입
@@ -73,9 +83,8 @@ public class MemberController {
 			//서비스
 			ArrayList<MemberVo> voList = ms.login(vo);
 			//결과
-
-			if(voList.get(1) != null) {
-				System.out.println("님 환영합니다. 로그인 성공");				
+			if(voList != null) {
+				System.out.println(voList.get(0).getNick()+"님 환영합니다. 로그인 성공");				
 			}else {
 				throw new Exception();
 			}
@@ -87,13 +96,22 @@ public class MemberController {
 		
 	}
 	
-	//전체 회원몰고 조회
+	//전체 회원정보 조회
 	public void printMemberList() {
+		System.out.println("회원 정보 조회");
 		//데이터
-		
-		//서비스
-		
-		//결과
+		try {
+			//서비스
+			ArrayList<MemberVo> voList = ms.getMemberList();
+			//결과
+			for(MemberVo vo:voList) {
+				System.out.println(vo.getId()+" | "+vo.getPwd()+" | "+vo.getNick());
+			}
+			
+		}catch(Exception e) {
+			System.out.println("조회 실패");
+			e.printStackTrace();
+		}
 		
 	}
 	
