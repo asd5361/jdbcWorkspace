@@ -85,12 +85,33 @@ public class BoardDao {
 	}
 
 	public int update(Connection conn, BoardVo vo) throws Exception{
+		
 		//sql
-		String sql = "UPDATE";
-		PreparedStatement pstmt = conn.prepareStatement(sql);
+		String sql;
+		PreparedStatement pstmt;
+		if(vo.getTitle()==null) {
+			sql = "UPDATE J_BOARD SET CONTENT = ? WHERE BOARD_NO = ?";			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getContent());
+			pstmt.setString(2, vo.getNo());
+		}else if(vo.getContent()==null) {
+			sql = "UPDATE J_BOARD SET TITLE = ? WHERE BOARD_NO = ?";			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getNo());
+		}else{
+			sql = "UPDATE J_BOARD SET TITLE = ? ,CONTENT = ? WHERE BOARD_NO = ?";			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContent());
+			pstmt.setString(3, vo.getNo());
+		}
 		//rs
 		int result = pstmt.executeUpdate();
+		
 		//close
+		JDBCTemplate.Close(pstmt);
+		
 		return result;
 	}
 

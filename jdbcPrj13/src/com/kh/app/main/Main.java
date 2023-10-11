@@ -11,9 +11,10 @@ public class Main {
 		MemberController memberController = new MemberController();
 //		memberController.login();
 		BoardController borderController = new BoardController();
-//		borderController.list();
+		borderController.list();
 //		borderController.write();
-		borderController.read();
+//		borderController.read();
+//		borderController.update();
 	}
 
 }

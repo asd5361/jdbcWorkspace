@@ -3,6 +3,8 @@ package com.kh.app.board.controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.plaf.synth.SynthToggleButtonUI;
+
 import com.kh.app.board.service.BoardService;
 import com.kh.app.board.vo.BoardVo;
 
@@ -50,16 +52,53 @@ public class BoardController {
 		System.out.println("글 수정 창입니다.");
 		
 		//데이터
-		System.out.print("수정하고 싶은 글의 제목을 입력해주세요 : ");
-		String chinge = sc.nextLine();
-		System.out.print("수정할 제목 : ");
-		String title = sc.nextLine();
-		System.out.print("수정할 내용 : ");
-		String content = sc.nextLine();
+		System.out.print("수정하고 싶은 글번호를 입력해주세요:");
+		String no = sc.nextLine();
 		BoardVo vo = new BoardVo();
-		vo.setTitle(title);
-		vo.setContent(content);
+		vo.setNo(no);
+		String title = null;
+		String content = null;
+		System.out.print("수정할 제목 : ");
+		title = sc.nextLine();		
+		System.out.print("수정할 내용 : ");
+		content = sc.nextLine();
 		
+		if(title.equals("") && !content.equals("")) {
+			vo.setContent(content);
+		}else if(content.equals("") && !title.equals("")) {
+			vo.setTitle(title);
+		}else if(title.equals("") && content.equals("")) {
+			System.out.println("수정할 내용이 없습니다.");
+		}else{
+			vo.setTitle(title);
+			vo.setContent(content);			
+		}
+		
+	//if()==""
+//		System.out.print("1 : 제목 | 2 : 내용 | 3 : 둘다");
+//		String choi = sc.nextLine();
+//		switch(choi) {
+//		case "1" : 
+//			System.out.print("수정할 제목 : ");
+//			title = sc.nextLine();
+//			vo.setTitle(title);
+//			break;
+//		case "2" : 
+//			System.out.print("수정할 내용 : ");
+//			content = sc.nextLine();		
+//			vo.setContent(content);
+//			break;
+//		case "3" : 
+//			System.out.print("수정할 제목 : ");
+//			title = sc.nextLine();		
+//			System.out.print("수정할 내용 : ");
+//			content = sc.nextLine();		
+//			vo.setTitle(title);
+//			vo.setContent(content);
+//			break;
+//		default : System.out.println("잘못 입력");
+//		}
+
 		//서비스
 		try {
 			int result = bs.update(vo);
