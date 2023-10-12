@@ -15,7 +15,7 @@ public class BoardDao {
 	public ArrayList<BoardVo> list(Connection conn) throws Exception{
 
 		//sql
-		String sql = "SELECT * FROM J_BOARD";
+		String sql = "SELECT * FROM J_BOARD WHERE DEL_YN = 'N'";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		
 		//rs
@@ -58,7 +58,7 @@ public class BoardDao {
 
 		//sql
 		String keyword = "%"+key + "%";
-		String sql = "SELECT * FROM J_BOARD WHERE TITLE LIKE ? OR CONTENT LIKE ?";
+		String sql = "SELECT * FROM J_BOARD WHERE TITLE LIKE ? OR CONTENT LIKE ? AND DEL_YN = 'N'";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, keyword);
 		pstmt.setString(2, keyword);
@@ -90,28 +90,41 @@ public class BoardDao {
 		String sql;
 		PreparedStatement pstmt;
 		if(vo.getTitle()==null) {
-			sql = "UPDATE J_BOARD SET CONTENT = ? WHERE BOARD_NO = ?";			
+			sql = "UPDATE J_BOARD SET CONTENT = ? WHERE BOARD_NO = ? AND DEL_YN = 'N'";			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getContent());
 			pstmt.setString(2, vo.getNo());
 		}else if(vo.getContent()==null) {
-			sql = "UPDATE J_BOARD SET TITLE = ? WHERE BOARD_NO = ?";			
+			sql = "UPDATE J_BOARD SET TITLE = ? WHERE BOARD_NO = ? AND DEL_YN = 'N'";			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getNo());
 		}else{
-			sql = "UPDATE J_BOARD SET TITLE = ? ,CONTENT = ? WHERE BOARD_NO = ?";			
+			sql = "UPDATE J_BOARD SET TITLE = ? ,CONTENT = ? WHERE BOARD_NO = ? AND DEL_YN = 'N'";			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
 			pstmt.setString(3, vo.getNo());
 		}
-		//rs
 		int result = pstmt.executeUpdate();
+		//rs
 		
 		//close
 		JDBCTemplate.Close(pstmt);
 		
+		return result;
+	}
+
+	public int delete(Connection conn, String num) throws Exception{
+		//sql
+		String sql = "UPDATE J_BOARD SET DEL_YN = 'Y' WHERE BOARD_NO = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, num);
+		int result = pstmt.executeUpdate();
+		//rs
+		
+		//close
+		JDBCTemplate.Close(pstmt);
 		return result;
 	}
 

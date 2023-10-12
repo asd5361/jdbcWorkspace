@@ -73,31 +73,6 @@ public class BoardController {
 			vo.setTitle(title);
 			vo.setContent(content);			
 		}
-		
-	//if()==""
-//		System.out.print("1 : 제목 | 2 : 내용 | 3 : 둘다");
-//		String choi = sc.nextLine();
-//		switch(choi) {
-//		case "1" : 
-//			System.out.print("수정할 제목 : ");
-//			title = sc.nextLine();
-//			vo.setTitle(title);
-//			break;
-//		case "2" : 
-//			System.out.print("수정할 내용 : ");
-//			content = sc.nextLine();		
-//			vo.setContent(content);
-//			break;
-//		case "3" : 
-//			System.out.print("수정할 제목 : ");
-//			title = sc.nextLine();		
-//			System.out.print("수정할 내용 : ");
-//			content = sc.nextLine();		
-//			vo.setTitle(title);
-//			vo.setContent(content);
-//			break;
-//		default : System.out.println("잘못 입력");
-//		}
 
 		//서비스
 		try {
@@ -118,10 +93,23 @@ public class BoardController {
 	
 	//글 삭제
 	public void delete() {
+		System.out.println("글 삭제 창입니다.");
 		//데이터
-		
+		System.out.print("삭제할 게시글의 글번호를 입력해주세요:");
+		String num = sc.nextLine();
 		//서비스
-		
+		try {
+			int result = bs.delete(num);
+			
+			if(result == 1) {
+				System.out.println("삭제 완료");
+			}else {
+				throw new Exception();
+			}
+		}catch(Exception e) {
+			System.out.println("삭제 실패");
+			e.printStackTrace();
+		}
 		//결과처리
 		
 	}

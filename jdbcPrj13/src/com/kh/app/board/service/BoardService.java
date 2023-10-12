@@ -72,4 +72,21 @@ public class BoardService {
 		return result;
 	}
 
+	public int delete(String num) throws Exception{
+		//conn
+		Connection conn =JDBCTemplate.getConnection();
+		//sql
+		int result = dao.delete(conn,num);
+		//tx
+		if(result == 1 ) {
+			JDBCTemplate.Commit(conn);
+		}else {
+			JDBCTemplate.Rollback(conn);
+		}
+		//close
+		JDBCTemplate.Close(conn);
+		return result;
+		
+	}
+
 }
