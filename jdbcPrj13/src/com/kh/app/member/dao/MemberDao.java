@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.kh.app.member.db.JDBCTemplate;
 import com.kh.app.member.vo.MemberVo;
+
+import oracle.jdbc.proxy.annotation.Pre;
 
 public class MemberDao {
 	
@@ -47,7 +50,7 @@ public class MemberDao {
 			String quti = rs.getString("QUIT_YN");
 			
 			dbVo = new MemberVo();
-			dbVo.setId(no);
+			dbVo.setNo(no);
 			dbVo.setId(id);
 			dbVo.setPwd(pwd);
 			dbVo.setNick(nick);
@@ -61,5 +64,28 @@ public class MemberDao {
 		
 		return dbVo;
 	}
+
+	public ArrayList<MemberVo> getMemberList(Connection conn) throws Exception{
+		//sql
+		String sql = "SELECT * FROM J_MEMBER WHERE QUIT_YN = 'N'";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		ArrayList<MemberVo> memberList = new ArrayList<MemberVo>();
+		//rs
+		while(rs.next()) {
+			MemberVo vo = new MemberVo();
+			vo.setNo(rs.getString("MEMBER_NO"));
+			vo.setId(rs.getString("ID"));
+			vo.setNick(rs.getString("NICK"));
+			memberList.add(vo);
+		}
+		//close
+		JDBCTemplate.Close(rs);
+		JDBCTemplate.Close(pstmt);
+		
+		return memberList;
+	}
+
+	
 
 }

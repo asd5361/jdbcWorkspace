@@ -44,22 +44,22 @@ public class BoardService {
 		return result;
 	}
 
-	public ArrayList<BoardVo> read(String key) throws Exception{
+	public ArrayList<BoardVo> printDetail(String key) throws Exception{
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
 		//sql
-		ArrayList<BoardVo> boardList = dao.read(conn,key);
+		ArrayList<BoardVo> boardList = dao.printDetail(conn,key);
 		//tx
 		//close
 		JDBCTemplate.Close(conn);
 		return boardList;
 	}
 
-	public int update(BoardVo vo) throws Exception{
+	public int edit(BoardVo vo) throws Exception{
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
 		//sql
-		int result = dao.update(conn,vo);
+		int result = dao.edit(conn,vo);
 		//tx
 		if(result == 1) {
 			JDBCTemplate.Commit(conn);

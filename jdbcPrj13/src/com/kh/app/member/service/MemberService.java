@@ -1,6 +1,7 @@
 package com.kh.app.member.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import com.kh.app.member.dao.MemberDao;
 import com.kh.app.member.db.JDBCTemplate;
@@ -43,6 +44,21 @@ public class MemberService {
 		
 		return dbVo;
 
+	}
+
+	public ArrayList<MemberVo> getMemberList() throws Exception{
+		//conn
+		Connection conn = JDBCTemplate.getConnection();
+		
+		//sql
+		ArrayList<MemberVo> memberList = dao.getMemberList(conn);
+		
+		//tx
+		
+		//close
+		JDBCTemplate.Close(conn);
+		
+		return memberList;
 	}
 
 

@@ -7,6 +7,7 @@ import javax.swing.plaf.synth.SynthToggleButtonUI;
 
 import com.kh.app.board.service.BoardService;
 import com.kh.app.board.vo.BoardVo;
+import com.kh.app.main.Main;
 
 public class BoardController {
 	
@@ -17,11 +18,28 @@ public class BoardController {
 		sc = new Scanner(System.in);
 		bs = new BoardService();
 	}
+	
+	public void selectMenu() {
+		System.out.println("1. 게시글 작성");
+		System.out.println("2. 게시글 목록 조회");
+		System.out.println("3. 게시글 상세 조회");
+		System.out.println("4. 게시글 수정");
+		System.out.println("5. 게시글 삭제");
+		String num = sc.nextLine();
+		
+		switch(num) {
+		case "1" : write(); break;
+		case "2" : printList(); break;
+		case "3" : printDetail(); break;
+		case "4" : edit(); break;
+		case "5" : delete(); break;
+		default : System.out.println("잘못 입력하였습니다.");
+		}
+	}
 
 	//글 작성
 	public void write() {
 		System.out.println("글 작성 창입니다.");
-		String num = "1"; //login 후 vo 받아올 부분 수정하기
 		//데이터
 		System.out.print("졔목 : ");
 		String title = sc.nextLine();
@@ -30,7 +48,8 @@ public class BoardController {
 		BoardVo vo = new BoardVo(); 
 		vo.setTitle(title);
 		vo.setContent(content);
-		vo.setWriter(num);
+		System.out.println(Main.loginMember.getNo());
+		vo.setWriter(Main.loginMember.getNo());
 		
 		//서비스
 		try {
@@ -48,7 +67,7 @@ public class BoardController {
 	}
 	
 	//글 수정
-	public void update() {
+	public void edit() {
 		System.out.println("글 수정 창입니다.");
 		
 		//데이터
@@ -76,7 +95,7 @@ public class BoardController {
 
 		//서비스
 		try {
-			int result = bs.update(vo);
+			int result = bs.edit(vo);
 			//결과처리
 			if(result == 1) {
 				System.out.println("업데이트 완료");
@@ -115,7 +134,7 @@ public class BoardController {
 	}
 	
 	//전체 조회
-	public void list() {
+	public void printList() {
 		System.out.println("게시판입니다.");
 		//데이터
 		//서비스
@@ -142,7 +161,7 @@ public class BoardController {
 	}
 	
 	//글 찾기
-	public void read() {
+	public void printDetail() {
 		System.out.println("글찾기 창입니다.");
 		//데이터
 		System.out.print("찾으실 글의 검색어를 입력해주세요 : ");
@@ -150,7 +169,7 @@ public class BoardController {
 		
 		//서비스
 		try {
-			ArrayList<BoardVo> boardList = bs.read(key);
+			ArrayList<BoardVo> boardList = bs.printDetail(key);
 			//결과처리
 			if(boardList != null) {
 				for(BoardVo vo : boardList) {

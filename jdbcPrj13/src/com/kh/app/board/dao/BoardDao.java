@@ -15,7 +15,7 @@ public class BoardDao {
 	public ArrayList<BoardVo> list(Connection conn) throws Exception{
 
 		//sql
-		String sql = "SELECT * FROM J_BOARD WHERE DEL_YN = 'N'";
+		String sql = "SELECT * FROM J_BOARD B JOIN J_MEMBER J ON J.MEMBER_NO = B.BOARD_NO WHERE DEL_YN = 'N'";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		
 		//rs
@@ -26,7 +26,7 @@ public class BoardDao {
 			vo.setNo(rs.getString("BOARD_NO"));
 			vo.setTitle(rs.getString("TITLE"));
 			vo.setContent(rs.getString("CONTENT"));
-			vo.setWriter(rs.getString("WRITER_NO"));
+			vo.setWriter(rs.getString("NICK"));
 			vo.setDate(rs.getString("ENROLL_DATE"));
 			vo.setDel(rs.getString("DEL_YN"));
 			boardList.add(vo);
@@ -41,7 +41,7 @@ public class BoardDao {
 	public int write(Connection conn,BoardVo vo) throws Exception{
 		//sql
 		String sql = "INSERT INTO J_BOARD (BOARD_NO,TITLE,CONTENT,WRITER_NO,ENROLL_DATE,DEL_YN) VALUES "
-				+ "(NVL((SELECT J.BOARD_NO FROM J_BOARD J WHERE ROWNUM = 1), 0) + 1,?,?,?,SYSDATE,'N')";
+				+ "(SEQ_MEMBER.NEXTVAL,?,?,?,SYSDATE,'N')";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		
 		pstmt.setString(1,vo.getTitle());
@@ -54,11 +54,11 @@ public class BoardDao {
 		return result;
 	}
 
-	public ArrayList<BoardVo> read(Connection conn, String key) throws Exception{
+	public ArrayList<BoardVo> printDetail(Connection conn, String key) throws Exception{
 
 		//sql
 		String keyword = "%"+key + "%";
-		String sql = "SELECT * FROM J_BOARD WHERE TITLE LIKE ? OR CONTENT LIKE ? AND DEL_YN = 'N'";
+		String sql = "SELECT * FROM J_BOARD B JOIN J_MEMBER M ON M.MEMBER_NO = B.WRITER_NO WHERE TITLE LIKE ? OR CONTENT LIKE ? AND DEL_YN = 'N'";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, keyword);
 		pstmt.setString(2, keyword);
@@ -71,7 +71,7 @@ public class BoardDao {
 			vo.setNo(rs.getString("BOARD_NO"));
 			vo.setTitle(rs.getString("TITLE"));
 			vo.setContent(rs.getString("CONTENT"));
-			vo.setWriter(rs.getString("WRITER_NO")); 
+			vo.setWriter(rs.getString("ID")); 
 			vo.setDate(rs.getString("ENROLL_DATE"));
 			vo.setDel(rs.getString("DEL_YN"));
 			boardList.add(vo);
@@ -84,7 +84,7 @@ public class BoardDao {
 		return boardList;
 	}
 
-	public int update(Connection conn, BoardVo vo) throws Exception{
+	public int edit(Connection conn, BoardVo vo) throws Exception{
 		
 		//sql
 		String sql;
