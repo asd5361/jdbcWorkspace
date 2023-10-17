@@ -48,11 +48,11 @@ public class MemberService {
 	}
 
 	//회원탈퇴
-	public int quit(MemberVo vo) throws Exception{
+	public int quit(String no) throws Exception{
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
 		//dao
-		int result = dao.quit(conn, vo);
+		int result = dao.quit(conn, no);
 		//tx
 		if(result == 1) {
 			JDBCTemplate.commit(conn);
@@ -98,6 +98,11 @@ public class MemberService {
 		JDBCTemplate.close(conn);
 		
 		return result;
+	}
+
+	public int adminQuit() {
+		
+		return 0;
 	}
 
 	

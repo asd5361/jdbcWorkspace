@@ -9,8 +9,8 @@ import com.kh.mini.member.vo.MemberVo;
 
 public class Main {
 
+	public static MemberVo loginMember;
 	public static final Scanner SC = new Scanner(System.in);
-	public static MemberVo loginMember = new MemberVo();
 	
 	public static void main(String[] args) {
 
@@ -24,7 +24,7 @@ public class Main {
 			
 			switch(num) {
 			case "1" : mc.selectMenu(); break;
-			case "2" : /*bc.selectMenu(); */break;
+			case "2" : bc.selectMenu(); break;
 			case "3" : return;
 			default : System.out.println("잘못 입력 했습니다.");
 		}

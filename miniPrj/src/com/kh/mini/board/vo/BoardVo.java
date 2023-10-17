@@ -6,27 +6,28 @@ public class BoardVo {
 	private String title;
 	private String content;
 	private String writerNo;
+	private String writerNick;
 	private String hit;
 	private String enrollDate;
 	private String modifyDate;
 	private String delYn;
-	
 	public BoardVo() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-	
-	public BoardVo(String no, String title, String content, String writerNo, String hit, String enrollDate,
-			String modifyDate, String delYn) {
+	public BoardVo(String no, String title, String content, String writerNo, String writerNick, String hit,
+			String enrollDate, String modifyDate, String delYn) {
 		super();
 		this.no = no;
 		this.title = title;
 		this.content = content;
 		this.writerNo = writerNo;
+		this.writerNick = writerNick;
 		this.hit = hit;
 		this.enrollDate = enrollDate;
 		this.modifyDate = modifyDate;
 		this.delYn = delYn;
 	}
-	
 	public String getNo() {
 		return no;
 	}
@@ -50,6 +51,12 @@ public class BoardVo {
 	}
 	public void setWriterNo(String writerNo) {
 		this.writerNo = writerNo;
+	}
+	public String getWriterNick() {
+		return writerNick;
+	}
+	public void setWriterNick(String writerNick) {
+		this.writerNick = writerNick;
 	}
 	public String getHit() {
 		return hit;
@@ -75,11 +82,11 @@ public class BoardVo {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
-	
 	@Override
 	public String toString() {
-		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", writerNo=" + writerNo + ", hit="
-				+ hit + ", enrollDate=" + enrollDate + ", modifyDate=" + modifyDate + ", delYn=" + delYn + "]";
+		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", writerNo=" + writerNo
+				+ ", writerNick=" + writerNick + ", hit=" + hit + ", enrollDate=" + enrollDate + ", modifyDate="
+				+ modifyDate + ", delYn=" + delYn + "]";
 	}
 	
 }
