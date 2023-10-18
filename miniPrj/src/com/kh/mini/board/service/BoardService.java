@@ -14,7 +14,8 @@ public class BoardService {
 	public BoardService() {
 		 dao = new BoardDao();
 	}
-
+	
+	//게시글 작성
 	public int write(BoardVo vo) throws Exception{
 
 		//conn
@@ -44,17 +45,29 @@ public class BoardService {
 		JDBCTemplate.close(conn);
 		return voList;
 	}
-
+	
+	//게시글 상세 조회
 	public BoardVo boardDetailByNo(String num) throws Exception{
 
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
+		
 		//dao
+		int result = dao.increaseHit(conn,num);
 		BoardVo vo = dao.boardDetailByNo(conn,num);
+		
+		if( result == 1) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		
 		//close
 		JDBCTemplate.close(conn);
 		
 		return vo;
 	}
+	
+	
 
 }

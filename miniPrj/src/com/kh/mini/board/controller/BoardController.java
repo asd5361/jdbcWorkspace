@@ -105,14 +105,16 @@ public class BoardController {
 			e.printStackTrace();
 		}
 	}
-	//목록 조회 - 조회수 (번호, 제목, 작성자닉네임, 조회수, 작성일시)
+	
 	
 	//게시글 검색 - 제목
 	//게시글 검색 - 작성자  닉네임
+	
 	/*
 	 * 상세 조회 - 번호 (모든 칼럼)
 	 * SELECT * FROM BOARD WHERE NO = ? AND DEL_YN = 'N' 
 	 * 
+	 * + 목록 조회 - 조회수 (번호, 제목, 작성자닉네임, 조회수, 작성일시)
 	 */
 	public void boardDetailByNo(){
 		try {

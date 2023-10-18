@@ -24,7 +24,7 @@ public class BoardDao {
 		
 		return result;
 	}
-
+	//게시글 목록 (최신순)
 	public List<BoardVo> boardList(Connection conn) throws Exception{
 		//sql
 		String sql = "SELECT M.NO ,B.TITLE ,M.NICK AS WRITER_NICK ,B.HIT ,TO_CHAR(B.ENROLL_DATE,'YYYY-MM-DD') AS ENROLL_DATE FROM BOARD B JOIN MEMBER M ON B.WRITER_NO = M.NO WHERE B.DEL_YN = 'N' ORDER BY B.NO DESC";
@@ -50,7 +50,7 @@ public class BoardDao {
 		
 		return voList;
 	}
-
+	//게시판 상세 조회
 	public BoardVo boardDetailByNo(Connection conn, String num) throws Exception{
 		//sql
 		String sql = "SELECT B.NO,TITLE,CONTENT,M.NICK AS WRITERNICK,HIT,TO_CHAR(B.ENROLL_DATE,'MM/DD')AS ENROLLDATE,TO_CHAR(B.MODIFY_DATE,'MM/DD') AS MODIFYDATE FROM BOARD B JOIN MEMBER M ON B.WRITER_NO = M.NO WHERE B.NO = ? AND B.DEL_YN = 'N'";
@@ -82,6 +82,21 @@ public class BoardDao {
 		JDBCTemplate.close(pstmt);
 		
 		return vo;
+	}
+	
+	//조회수 증가
+	public int increaseHit(Connection conn, String num) throws Exception{
+		
+		//SQL
+		String sql = "UPDATE BOARD SET HIT = HIT+1 WHERE NO = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, num);
+		int result = pstmt.executeUpdate();
+		
+		//close
+		JDBCTemplate.close(pstmt);
+		
+		return result;
 	}
 
 }
