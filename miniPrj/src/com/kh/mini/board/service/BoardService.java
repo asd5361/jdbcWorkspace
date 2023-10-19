@@ -67,6 +67,26 @@ public class BoardService {
 		
 		return vo;
 	}
+	//게시글 삭제 (본인만)
+	public int delete(HashMap<String, String> map) throws Exception{
+		//conn
+		Connection conn = JDBCTemplate.getConnection();
+		
+		//dao
+		int result = dao.delete(conn,map);
+		
+		//tx
+		if(result == 1) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		
+		//close
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
 	
 	
 

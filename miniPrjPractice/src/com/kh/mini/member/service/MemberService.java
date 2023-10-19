@@ -1,8 +1,10 @@
 package com.kh.mini.member.service;
 
 import java.sql.*;
+import java.util.HashMap;
 
 import com.kh.jdbc.JDBCTemplate;
+import com.kh.mini.main.Main;
 import com.kh.mini.member.dao.MemberDao;
 import com.kh.mini.member.vo.MemberVo;
 
@@ -17,7 +19,6 @@ public class MemberService {
 	public int join(MemberVo vo) throws Exception{
 		
 		Connection conn = JDBCTemplate.getConnection();
-		
 		
 		String code = dao.codeMake(conn,vo.getAddress());
 		if(code == null) {
@@ -44,6 +45,47 @@ public class MemberService {
 		
 		JDBCTemplate.close(conn);
 		return userdb;
+	}
+
+	public int quit(String no) throws Exception{
+		Connection conn = JDBCTemplate.getConnection();
+		int result = dao.quit(conn,no);
+		if(result == 1 ) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+
+	public int changePwd(HashMap<String, String> map) throws Exception{
+		Connection conn = JDBCTemplate.getConnection();
+		int result = dao.changePwd(conn,map);
+		if(result == 1 ) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		
+		return result;
+	}
+
+	public int changeNick(MemberVo vo) throws Exception{
+		Connection conn = JDBCTemplate.getConnection();
+		int result = dao.changeNick(conn,vo);
+		if(result == 1 ) {
+			Main.loginMember.setNick(vo.getNick()); 	//바뀐 닉네임 loginMember에 갱신함
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		return result;
 	}
 
 }

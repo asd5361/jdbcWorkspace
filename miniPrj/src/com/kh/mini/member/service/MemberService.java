@@ -1,8 +1,11 @@
 package com.kh.mini.member.service;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
 
 import com.kh.jdbc.JDBCTemplate;
+import com.kh.mini.main.Main;
 import com.kh.mini.member.dao.MemberDao;
 import com.kh.mini.member.vo.MemberVo;
 
@@ -65,11 +68,11 @@ public class MemberService {
 	}
 
 	//비밀번호 수정
-	public int pwdEdite(MemberVo vo, String newPwd) throws Exception{
+	public int changePwd(HashMap<String, String> map) throws Exception{
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
 		//dao
-		int result = dao.pwdEdite(conn,vo,newPwd);
+		int result = dao.changePwd(conn,map);
 		//tx
 		if(result == 1) {
 			JDBCTemplate.commit(conn);
@@ -83,11 +86,11 @@ public class MemberService {
 	}
 
 	//닉네임 수정
-	public int nickEdit(MemberVo vo, String newNick) throws Exception{
+	public int changeNick(MemberVo vo) throws Exception{
 		//conn
 		Connection conn = JDBCTemplate.getConnection();
 		//dao
-		int result = dao.nickEdite(conn,vo,newNick);
+		int result = dao.changeNick(conn,vo);
 		//tx
 		if(result == 1) {
 			JDBCTemplate.commit(conn);
@@ -99,11 +102,24 @@ public class MemberService {
 		
 		return result;
 	}
-
+	//강제 탈퇴 미완성
 	public int adminQuit() {
 		
 		return 0;
 	}
+	//회원 전체 조회
+	public List<MemberVo> memberList() throws Exception{
+		
+		//conn
+		Connection conn = JDBCTemplate.getConnection();
+		//dao
+		List<MemberVo> list = dao.memberList(conn);
+		//close
+		JDBCTemplate.close(conn);
+		return list;
+	}
+
+
 
 	
 

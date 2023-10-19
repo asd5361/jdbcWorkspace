@@ -18,8 +18,9 @@ public class Main {
 		MemberController memberController = new MemberController();
 		
 		System.out.println("미니프로젝트 연습_01");
-		
-		memberController.join();
+		while(true) {
+			memberController.memberMenu();
+		}
 	}
 
 }

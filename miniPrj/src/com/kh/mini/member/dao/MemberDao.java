@@ -1,6 +1,7 @@
 package com.kh.mini.member.dao;
 
 import java.sql.*;
+import java.util.*;
 
 import com.kh.jdbc.JDBCTemplate;
 import com.kh.mini.member.vo.MemberVo;
@@ -70,13 +71,13 @@ public class MemberDao {
 	}
 
 	//비밀번호 수정
-	public int pwdEdite(Connection conn, MemberVo vo, String newPwd) throws Exception{
+	public int changePwd(Connection conn, HashMap<String, String> map) throws Exception{
 		//sql
-		String sql = "UPDATE MEMBER SET PWD = ? WHERE ID = ? AND PWD = ? AND DEL_YN = 'N'";
+		String sql = "UPDATE MEMBER SET PWD = ? WHERE NO = ? AND PWD = ?";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, newPwd);
-		pstmt.setString(2, vo.getId());
-		pstmt.setString(3, vo.getPwd());
+		pstmt.setString(1, map.get("newPwd"));
+		pstmt.setString(2, map.get("no"));
+		pstmt.setString(3, map.get("oldPwd"));
 		int result = pstmt.executeUpdate();
 		
 		//cloes
@@ -86,19 +87,43 @@ public class MemberDao {
 	}
 
 	//닉네임 수정
-	public int nickEdite(Connection conn, MemberVo vo, String newNick) throws Exception{
+	public int changeNick(Connection conn, MemberVo vo) throws Exception{
 		//sql
-		String sql = "UPDATE MEMBER SET NICK = ? WHERE ID = ? AND PWD = ? AND DEL_YN = 'N'";
+		String sql = "UPDATE MEMBER SET NICK = ? WHERE NO = ?";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, newNick);
-		pstmt.setString(2, vo.getId());
-		pstmt.setString(3, vo.getPwd());
+		pstmt.setString(1, vo.getNick());
+		pstmt.setString(2, vo.getNo());
 		int result = pstmt.executeUpdate();
 		
 		//cloes
 		JDBCTemplate.close(pstmt);
 		
 		return result;
+	}
+	//회원 전체 조회
+	public List<MemberVo> memberList(Connection conn) throws Exception{
+		//SQL
+		String sql = "SELECT ID, NICK, ENROLL_DATE, MODIFY_DATE, DEL_YN FROM MEMBER";
+		PreparedStatement pstmt =conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		List<MemberVo> list = new ArrayList<MemberVo>();
+		MemberVo vo =null;
+		while(rs.next()) {
+			vo = new MemberVo();
+			vo.setId(rs.getString("ID"));
+			vo.setNick(rs.getString("NICK"));
+			vo.setEnrollDate(rs.getString("ENROLL_DATE"));
+			vo.setModifyDate(rs.getString("MODIFY_DATE"));
+			vo.setDelYn(rs.getString("DEL_YN"));
+			
+			list.add(vo);
+		}
+		//rs
+		JDBCTemplate.close(rs);
+		JDBCTemplate.close(pstmt);
+		
+		//close
+		return list;
 	}
 
 	

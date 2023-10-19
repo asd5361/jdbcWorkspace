@@ -18,7 +18,7 @@ public class BoardController {
 		System.out.println("1. 게시글작성");
 		System.out.println("2. 목록조회");
 		System.out.println("3. 상세조회");
-//		System.out.println("4. 회원 탈퇴");
+		System.out.println("4. 게시글 삭제");
 //		System.out.println("5. 비밀번호 변경");
 		
 		String num = Main.SC.nextLine();
@@ -27,7 +27,7 @@ public class BoardController {
 		case "1" : write(); break;
 		case "2" : boardList(); break;
 		case "3" : boardDetailByNo(); break;
-//		case "4" : quit();; break;
+		case "4" : delete(); break;
 //		case "5" : pwdEdit(); break;
 			default : System.out.println("잘못 입력하였습니다.");
 		}
@@ -73,7 +73,39 @@ public class BoardController {
 			e.printStackTrace();
 		}
 	}
-	//삭제 (작성자, 본인만)
+	/*삭제 (작성자, 본인만)
+	 * 
+	 * UPDATE BOARD SET DEL_YN = 'Y' , MODIFY_DATE = SYSDATE WHERE NO = ? AND WRITER_NO = ?
+	 */
+	public void delete() {
+		System.out.println("===== 게시글 삭제 (본인만) =====");
+		try {
+			//로그인 여부
+			if(Main.loginMember == null) {
+				throw new Exception("로그인 상태가 아닙니다.");	
+			}
+			//데이터
+			System.out.print("지울 게시글 번호 : ");
+			String num = Main.SC.nextLine();
+			String memberNo =Main.loginMember.getNo();
+			
+			//서비스
+			HashMap<String, String> map = new HashMap<String,String>();
+			map.put("boardNum", num);
+			map.put("loginMemberNo", memberNo);
+			
+			int result = service.delete(map);
+			//결과
+			if(result != 1) {
+				throw new Exception();
+			}
+			System.out.println("게시글 삭제 완료");
+			
+		}catch(Exception e) {
+			System.out.println("게시글 삭제 실패");
+			e.printStackTrace();
+		}
+	}
 	
 	//수정 (제목, 내용)
 	

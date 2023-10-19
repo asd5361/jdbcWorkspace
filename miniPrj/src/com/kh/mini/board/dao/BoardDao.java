@@ -98,5 +98,22 @@ public class BoardDao {
 		
 		return result;
 	}
+	//게시글 삭제 (본인만)
+	public int delete(Connection conn, HashMap<String, String> map) throws Exception{
+		
+		//SQl
+		String sql = "UPDATE BOARD SET DEL_YN = 'Y' , MODIFY_DATE = SYSDATE WHERE NO = ? AND WRITER_NO = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, map.get("boardNum"));
+		pstmt.setString(2, map.get("loginMemberNo"));
+		
+		int result = pstmt.executeUpdate();
+		
+		//close
+		JDBCTemplate.close(pstmt);
+		
+		return result;
+	}
+	
 
 }
