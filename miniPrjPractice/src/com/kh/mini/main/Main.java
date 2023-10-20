@@ -10,12 +10,10 @@ public class Main {
 
 	public static Scanner SC = new Scanner(System.in);
 	public static MemberVo loginMember;
-	
-	public Main() {
-	}
 
 	public static void main(String[] args) {
 		MemberController memberController = new MemberController();
+		
 		
 		System.out.println("미니프로젝트 연습_01");
 		while(true) {

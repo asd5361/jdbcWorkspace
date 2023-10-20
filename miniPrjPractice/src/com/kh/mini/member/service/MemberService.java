@@ -3,7 +3,7 @@ package com.kh.mini.member.service;
 import java.sql.*;
 import java.util.HashMap;
 
-import com.kh.jdbc.JDBCTemplate;
+import com.kh.mini.jdbc.JDBCTemplate;
 import com.kh.mini.main.Main;
 import com.kh.mini.member.dao.MemberDao;
 import com.kh.mini.member.vo.MemberVo;
@@ -78,7 +78,32 @@ public class MemberService {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = dao.changeNick(conn,vo);
 		if(result == 1 ) {
-			Main.loginMember.setNick(vo.getNick()); 	//바뀐 닉네임 loginMember에 갱신함
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+
+	public int changeAddress(MemberVo vo) throws Exception{
+		Connection conn = JDBCTemplate.getConnection();
+		int result = dao.changeAddress(conn,vo);
+		if(result == 1 ) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+
+	public int changePhone(MemberVo vo) throws Exception{
+		Connection conn = JDBCTemplate.getConnection();
+		int result = dao.changePhone(conn,vo);
+		if(result == 1 ) {
 			JDBCTemplate.commit(conn);
 		}else {
 			JDBCTemplate.rollback(conn);

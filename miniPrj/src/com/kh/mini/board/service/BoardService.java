@@ -87,6 +87,19 @@ public class BoardService {
 		
 		return result;
 	}
+
+	public List<BoardVo> searchBoardByTitle(String searchValue) throws Exception{
+		//conn
+		Connection conn = JDBCTemplate.getConnection();
+		
+		//dao
+		List<BoardVo> voList = dao.searchBoardByTitle(conn, searchValue);
+		
+		//close
+		JDBCTemplate.close(conn);
+		
+		return voList;
+	}
 	
 	
 

@@ -19,7 +19,7 @@ public class BoardController {
 		System.out.println("2. 목록조회");
 		System.out.println("3. 상세조회");
 		System.out.println("4. 게시글 삭제");
-//		System.out.println("5. 비밀번호 변경");
+		System.out.println("5. 검색(제목)");
 		
 		String num = Main.SC.nextLine();
 		
@@ -28,7 +28,7 @@ public class BoardController {
 		case "2" : boardList(); break;
 		case "3" : boardDetailByNo(); break;
 		case "4" : delete(); break;
-//		case "5" : pwdEdit(); break;
+		case "5" : searchBoardByTitle(); break;
 			default : System.out.println("잘못 입력하였습니다.");
 		}
 	}
@@ -122,7 +122,7 @@ public class BoardController {
 			List<BoardVo> voList = service.boardList();
 			
 			//결과처리
-			if(voList.isEmpty()) {
+			if(voList.isEmpty()) { // 강사님 GIT 확인해보기
 				throw new Exception();
 			}
 			for(BoardVo vo:voList) {
@@ -139,7 +139,48 @@ public class BoardController {
 	}
 	
 	
-	//게시글 검색 - 제목
+	/*게시글 검색 - 제목
+	 * SELECT 
+	 * 		B.NO
+	 * 		,TITLE
+	 * 		,NICK AS WRITER_NICK
+	 * 		,HIT
+	 * 		,TO_CHAR(B.ENROLL_DATE,'YYYY-MM-DD') AS ENROLL_DATE
+	 * FROM BOARD B JOIN MEMBER M ON B.WRITER_NO = M.NO 
+	 * WHERE TITLE LIKE ? 
+	 * ORDER BY B.NO DESC;
+	 * 
+	 */
+	public void searchBoardByTitle() {
+		System.out.println("========== 게시글 상세 조회 (제목) ==========");
+		try {
+			//데이터
+			System.out.print("제목 검색 :");
+			String searchValue= Main.SC.nextLine();
+			
+			//서비스
+			List<BoardVo> voList = service.searchBoardByTitle(searchValue);
+			
+			//결과
+			if(voList.size()==0) {
+				System.out.println("검색 결과가 없습니다.");
+			}
+			
+			for(BoardVo vo : voList) {
+				System.out.println("====================================================");
+				System.out.print("글번호: "+vo.getNo());
+				System.out.print(" | 제목: "+vo.getTitle());
+				System.out.print(" | 닉네임: "+vo.getWriterNick());
+				System.out.print(" | 조회수: "+vo.getHit());
+				System.out.println(" | 작성일시: "+vo.getEnrollDate());
+				System.out.println("====================================================");
+			}
+		}catch(Exception e) {
+			System.out.println("게시글 검색 실패");
+			e.printStackTrace();
+		}
+	}
+	
 	//게시글 검색 - 작성자  닉네임
 	
 	/*
@@ -149,8 +190,8 @@ public class BoardController {
 	 * + 목록 조회 - 조회수 (번호, 제목, 작성자닉네임, 조회수, 작성일시)
 	 */
 	public void boardDetailByNo(){
+		System.out.println("========== 게시글 상세 조회 (번호) ==========");
 		try {
-			System.out.println("========== 게시글 상세 조회 (번호) ==========");
 			//데이터
 			System.out.print("글번호 : ");
 			String num = Main.SC.nextLine();
@@ -158,7 +199,7 @@ public class BoardController {
 			BoardVo vo = service.boardDetailByNo(num);
 			
 			//결과처리
-			if(vo == null) {
+			if(vo == null) {	// 강사님 GIT 확인해보기
 				throw new Exception();
 			}
 //			System.out.println(vo);

@@ -3,7 +3,7 @@ package com.kh.mini.member.dao;
 import java.sql.*;
 import java.util.HashMap;
 
-import com.kh.jdbc.JDBCTemplate;
+import com.kh.mini.jdbc.JDBCTemplate;
 import com.kh.mini.member.vo.MemberVo;
 
 import oracle.jdbc.proxy.annotation.Pre;
@@ -14,8 +14,8 @@ public class MemberDao {
 	//회원가입
 	public int join(Connection conn, MemberVo vo) throws Exception{
 		
-		String sql = "INSERT INTO MEMBER_MINI(MEMBER_NO,AREAS_CODE,ID,PWD,NICK,NAME,EMAIL,PHONE,ADDRESS)"
-				+ "VALUES (SEQ_MEMBER_MINI.NEXTVAL,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO MEMBER(MEMBER_NO,AREAS_CODE,ID,PWD,NICK,NAME,EMAIL,PHONE,ADDRESS)"
+				+ "VALUES (SEQ_MEMBER.NEXTVAL,?,UPPER(?),?,?,?,?,?,?)";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, vo.getAreasCode());
 		pstmt.setString(2, vo.getId());
@@ -36,7 +36,7 @@ public class MemberDao {
 		int f = address.indexOf("구");
 		int e = address.indexOf("동");
 		String code = address.substring(f+1);
-		String sql = "SELECT AREAS_CODE FROM AREAS_MINI WHERE AREAS_NAME LIKE ?";
+		String sql = "SELECT AREAS_CODE FROM AREAS WHERE AREAS_NAME LIKE ?";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, code);
 		ResultSet rs = pstmt.executeQuery();
@@ -51,7 +51,7 @@ public class MemberDao {
 	}
 	//로그인
 	public MemberVo login(Connection conn, MemberVo vo) throws Exception{
-		String sql = "SELECT * FROM MEMBER_MINI WHERE ID = ? AND PWD = ?";
+		String sql = "SELECT * FROM MEMBER JOIN AREAS USING(AREAS_CODE) WHERE ID = UPPER(?) AND PWD = ?";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1,vo.getId());
 		pstmt.setString(2, vo.getPwd());
@@ -61,6 +61,7 @@ public class MemberDao {
 			userVo = new MemberVo();
 			userVo.setMemberNo(rs.getString("MEMBER_NO"));
 			userVo.setAreasCode(rs.getString("AREAS_CODE"));
+			userVo.setAreasName(rs.getString("AREAS_NAME"));
 			userVo.setId(rs.getString("ID"));
 			userVo.setPwd(rs.getString("PWD"));
 			userVo.setNick(rs.getString("NICK"));
@@ -78,7 +79,7 @@ public class MemberDao {
 	//회원탈퇴
 	public int quit(Connection conn,String no) throws Exception{
 		
-		String sql = "UPDATE MEMBER_MINI SET QUIT_YN = 'Y' WHERE MEMBER_NO = ?";
+		String sql = "UPDATE MEMBER SET QUIT_YN = 'Y' WHERE MEMBER_NO = ?";
 		
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, no);
@@ -91,12 +92,12 @@ public class MemberDao {
 	//비밀번호 변경
 	public int changePwd(Connection conn, HashMap<String, String> map) throws Exception{
 		
-		String sql = "UPDATE MEMBER_MINI SET PWD = ? WHERE MEMBER_NO = ? AND PWD = ?";
+		String sql = "UPDATE MEMBER SET PWD = ? WHERE MEMBER_NO = ? AND PWD = ?";
 		
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, map.get("newPwd"));
 		pstmt.setString(2, map.get("memberNo"));
-		pstmt.setString(2, map.get("oldPwd"));
+		pstmt.setString(3, map.get("oldPwd"));
 		int result = pstmt.executeUpdate();
 		
 		JDBCTemplate.close(pstmt);
@@ -107,9 +108,33 @@ public class MemberDao {
 	//닉네임 변경
 	public int changeNick(Connection conn, MemberVo vo) throws Exception{
 		
-		String sql ="UPDATE MEMBER_MINI SET NICK = ? WHERE MEMBER_NO = ?";
+		String sql ="UPDATE MEMBER SET NICK = ? WHERE MEMBER_NO = ?";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, vo.getNick());
+		pstmt.setString(2, vo.getMemberNo());
+		int result = pstmt.executeUpdate();
+		
+		JDBCTemplate.close(pstmt);
+		
+		return result;
+	}
+	//주소 변경
+	public int changeAddress(Connection conn, MemberVo vo) throws Exception{
+		String sql ="UPDATE MEMBER SET ADDRESS = ? WHERE MEMBER_NO = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, vo.getAddress());
+		pstmt.setString(2, vo.getMemberNo());
+		int result = pstmt.executeUpdate();
+		
+		JDBCTemplate.close(pstmt);
+		
+		return result;
+	}
+	//전화번호 변경
+	public int changePhone(Connection conn, MemberVo vo)  throws Exception{
+		String sql ="UPDATE MEMBER SET PHONE = ? WHERE MEMBER_NO = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, vo.getPhone());
 		pstmt.setString(2, vo.getMemberNo());
 		int result = pstmt.executeUpdate();
 		

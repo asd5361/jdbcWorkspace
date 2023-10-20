@@ -114,6 +114,32 @@ public class BoardDao {
 		
 		return result;
 	}
+	//게시글 검색 (제목)
+	public List<BoardVo> searchBoardByTitle(Connection conn, String searchValue) throws Exception{
+		//sql
+		String sql = "SELECT B.NO ,TITLE ,NICK AS WRITER_NICK ,HIT ,TO_CHAR(B.ENROLL_DATE,'YYYY-MM-DD') AS ENROLL_DATE FROM BOARD B JOIN MEMBER M ON B.WRITER_NO = M.NO WHERE TITLE LIKE '%' || ? ||'%' ORDER BY B.NO DESC";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, searchValue);
+		ResultSet rs = pstmt.executeQuery();
+		
+		//rs
+		List<BoardVo> voList = new ArrayList<BoardVo>();
+		while(rs.next()) {
+			BoardVo vo = new BoardVo();
+			vo.setNo(rs.getString("No"));
+			vo.setTitle(rs.getString("TITLE"));
+			vo.setWriterNick(rs.getString("WRITER_NICK"));
+			vo.setHit(rs.getString("HIT"));
+			vo.setEnrollDate(rs.getNString("ENROLL_DATE"));
+			voList.add(vo);
+		}
+		
+		//clsoe
+		JDBCTemplate.close(rs);
+		JDBCTemplate.close(pstmt);
+		
+		return voList;
+	}
 	
 
 }
