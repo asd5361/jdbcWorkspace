@@ -2,6 +2,7 @@ package com.kh.mini.member.controller;
 
 import java.util.*;
 
+import com.kh.mini.Trade.vo.TradeVo;
 import com.kh.mini.main.Main;
 import com.kh.mini.member.service.MemberService;
 import com.kh.mini.member.vo.MemberVo;
@@ -47,14 +48,9 @@ public class MemberController {
 		case "6" :Info(); break;
 		case "7" :quit(); break;
 		case "8" :purchaseList(); break;
-//		case "9" :wishList(); break;
-//		case "10" :score(); break;
+		case "9" :wishList(); break;
+		case "10" :score(); break;
 		}
-	}
-	private void purchaseList() {
-		System.out.println("===== 구매내역목록 ======");
-		
-		
 	}
 
 	// 내정보 보기 (마이페이지)
@@ -319,5 +315,103 @@ public class MemberController {
 			e.printStackTrace();
 		}	
 	}
-
+	//구매 내역 리스트
+	private void purchaseList() {
+		System.out.println("===== 구매 내역 목록 ======");
+		try {
+			//로그인 검사
+			if(Main.loginMember == null) {
+				throw new Exception("로그인부터 진행해주세요");
+			}
+			String no = Main.loginMember.getMemberNo();
+			List<TradeVo> voList = service.purchaseList(no);
+			
+			for(TradeVo vo : voList) {
+				System.out.println("====================");
+				System.out.println("구매일시 | 판매자닉네임 | 거래 장소 | 상품명 | 가격");
+				System.out.println(vo.getEnrollDate()+" | "+vo.getMemberNick()+" | "+vo.getTradeAreas()+" | "+vo.getProduct()+" | "+vo.getPrice());
+			}
+			
+		}catch(Exception e) {
+			System.out.println("구매 내역 조회 실패");
+			e.printStackTrace();
+		}
+	}
+	//관심목록 리스트
+	private void wishList() {
+		System.out.println("===== 관심 목록 리스트======");
+		try {
+			//로그인 검사
+			if(Main.loginMember == null) {
+				throw new Exception("로그인부터 진행해주세요");
+			}
+			String no = Main.loginMember.getMemberNo();
+			List<TradeVo> voList = service.wishList(no);
+			
+			for(TradeVo vo : voList) {
+				System.out.println("====================");
+				System.out.println("글번호 | 거래상태 | 게시글명 | 상품 | 가격");
+				System.out.println(vo.getBoardNo()+" | "+vo.getCompleteYn()+" | "+vo.getTitle()+" | "+vo.getProduct()+" | "+vo.getPrice());
+			}
+			
+			//정보변경
+			System.out.println("1.관심목록 삭제 9:이전으로 돌아가기");
+			String num = Main.SC.nextLine();
+			
+			switch(num) {
+			case "1" : wishDelete(); break;
+			case "9" : return; 
+			default : System.out.println("잘못 입력하였습니다.");
+			}
+			
+		}catch(Exception e) {
+			System.out.println("관심 목록 조회 실패");
+			e.printStackTrace();
+		}
+	}
+	//관심목록 제거
+	private void wishDelete() {
+		System.out.println("===== 관심 목록 삭제======");
+		try {
+			
+			System.out.println("삭제할 게시글 번호를 입력해주세요 : ");
+			String BoardNo = Main.SC.nextLine();
+			String memberNo = Main.loginMember.getMemberNo();
+			
+			int result = service.wishDelete(memberNo,BoardNo);
+			
+			if(result != 1) {
+				throw new Exception();
+			}
+			System.out.println("관심 목록 삭제 완료");
+			return;
+		}catch(Exception e) {
+			System.out.println("관심 목록 삭제 실패");
+			e.printStackTrace();
+		}
+	}
+	//매너온도 (추천수) 확인
+	private void score() {
+		System.out.println("===== 매너 온도 ======");
+		try {
+			//로그인 검사
+			if(Main.loginMember == null) {
+				throw new Exception("로그인부터 진행해주세요");
+			}
+			
+			String no = Main.loginMember.getMemberNo();
+			String score = service.score(no);
+			
+			if(score == null) {
+				throw new Exception();
+			}
+			
+			System.out.println("매너 온도 : "+score+"점");
+			
+		}catch(Exception e) {
+			System.out.println("매너 온도 확인 실패");
+			e.printStackTrace();
+		}
+		
+	}
 }
