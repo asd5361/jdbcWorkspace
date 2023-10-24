@@ -1,10 +1,10 @@
-package com.kh.mini.main;
+package com.cherry.main;
 
 import java.util.Scanner;
 
-import com.kh.mini.member.controller.MemberController;
-import com.kh.mini.member.vo.MemberVo;
-
+import com.cherry.main.controller.MainController;
+import com.cherry.manager.vo.ManagerVo;
+import com.cherry.member.vo.MemberVo;
 
 public class Main {
 
