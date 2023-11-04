@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javax.naming.spi.DirStateFactory.Result;
 
 import com.cherry.jdbc.JDBCTemplate;
+import com.cherry.main.Main;
 import com.cherry.member.vo.MemberVo;
 import com.cherry.notice.vo.NoticeVo;
 
@@ -22,7 +23,7 @@ public class NoticeDao {
 		//sql
 		String sql="INSERT INTO NOTICE(NOTICE_NO,MANAGER_NO,TITLE,CONTENT) VALUES(SEQ_NOTICE_NO.NEXTVAL,?,?,?)";
 		PreparedStatement pstmt=conn.prepareStatement(sql);
-		pstmt.setString(1, vo.getManagerNo());
+		pstmt.setString(1, Main.loginManager.getManagerNo()); 
 		pstmt.setString(2, vo.getTitle());
 		pstmt.setString(3, vo.getContent());
 		
@@ -71,7 +72,7 @@ public class NoticeDao {
 	//공지글 조회(최신순)//관리자
 	public ArrayList<NoticeVo> adminNoticeList(Connection conn) throws Exception {
 		//sql
-		String sql="SELECT N.NOTICE_NO,N.TITLE,M.NAME AS MANAGER_NAME,N.HIT,TO_CHAR(N.ENROLL_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"') AS ENROLL_DATE FROM NOTICE N JOIN MANAGER M ON M.MANAGER_NO=N.MANAGER_NO ORDER BY N.NOTICE_NO DESC";
+		String sql="SELECT N.NOTICE_NO,N.TITLE,M.NAME AS MANAGER_NAME,N.HIT,TO_CHAR(N.ENROLL_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"') AS ENROLL_DATE,SECRET_YN FROM NOTICE N JOIN MANAGER M ON M.MANAGER_NO=N.MANAGER_NO ORDER BY N.NOTICE_NO DESC";
 		PreparedStatement pstmt=conn.prepareStatement(sql);
 		ResultSet rs= pstmt.executeQuery();
 				
@@ -83,6 +84,7 @@ public class NoticeDao {
 		String managerName=rs.getString("MANAGER_NAME");
 		String hit=rs.getString("HIT");
 		String enrollDate=rs.getString("ENROLL_DATE");
+		String secretYn=rs.getString("SECRET_YN");
 					
 		NoticeVo vo=new NoticeVo();
 		vo.setNo(noticeNo);
@@ -90,6 +92,7 @@ public class NoticeDao {
 		vo.setManagerName(managerName);
 		vo.setHit(hit);
 		vo.setEnrolldate(enrollDate);
+		vo.setSecretYn(secretYn);
 				
 		voList.add(vo);
 			
@@ -138,7 +141,7 @@ public class NoticeDao {
 	//공지글 상세 조회//관리자
 	public NoticeVo adminNoticeDetailByNo(Connection conn, String num) throws Exception {
 		//sql
-		String sql="SELECT N.NOTICE_NO,N.TITLE,N.CONTENT,M.NAME AS MANAGER_NAME,N.HIT,TO_CHAR(N.ENROLL_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"HH24:MI') AS ENROLL_DATE,TO_CHAR(N.EDIT_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"HH24:MI') AS EDIT_DATE FROM NOTICE N JOIN MANAGER M ON M.MANAGER_NO=N.MANAGER_NO WHERE N.NOTICE_NO=? ";
+		String sql="SELECT N.NOTICE_NO,N.TITLE,N.CONTENT,M.NAME AS MANAGER_NAME,N.HIT,TO_CHAR(N.ENROLL_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"HH24:MI') AS ENROLL_DATE,TO_CHAR(N.EDIT_DATE,'YYYY\"년 \"MM\"월 \"DD\"일 \"HH24:MI') AS EDIT_DATE,SECRET_YN FROM NOTICE N JOIN MANAGER M ON M.MANAGER_NO=N.MANAGER_NO WHERE N.NOTICE_NO=? ";
 		PreparedStatement pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, num);
 		ResultSet rs=pstmt.executeQuery();
@@ -153,6 +156,7 @@ public class NoticeDao {
 			String hit=rs.getString("HIT");
 			String enrollDate=rs.getString("ENROLL_DATE");
 			String editDate=rs.getString("EDIT_DATE");
+			String secretYn=rs.getString("SECRET_YN");
 					
 			vo=new NoticeVo();
 			vo.setNo(no);
@@ -162,6 +166,7 @@ public class NoticeDao {
 			vo.setHit(hit);
 			vo.setEnrolldate(enrollDate);
 			vo.setEditDate(editDate);
+			vo.setSecretYn(secretYn);
 		}
 		//close
 		JDBCTemplate.close(rs);
@@ -261,7 +266,7 @@ public class NoticeDao {
 	//공지글 감추기
 	public int secret(Connection conn, HashMap<String, String> map) throws Exception {
 		//sql
-		String sql="UPDATE NOTICE SET SECRET_YN=?, EDIT_DATE= SYSDATE WHERE NOTICE_NO=? ";
+		String sql="UPDATE NOTICE SET SECRET_YN=UPPER(?), EDIT_DATE= SYSDATE WHERE NOTICE_NO=? ";
 		PreparedStatement pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, map.get("secretChoice"));
 		pstmt.setString(2, map.get("noticeNum"));

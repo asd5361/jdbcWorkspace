@@ -22,27 +22,12 @@ public class ManagerController {
 	public ManagerController() {
 		service = new ManagerService();
 	}
-//	//관리자 메뉴 선택
-//	public void managerMenu() {
-//		System.out.println("===== 관리자 메뉴 선택 =====");
-//		
-//		/* 관리자 기능 */
-//		System.out.println("1: 관리자 로그인");
-//		System.out.print("입력창 :");
-//		String num = Main.SC.nextLine();
-//		
-//		switch(num) {
-//		case "1" :loginManager(); break;
-//
-//		default : System.out.println("잘못 입력하였습니다.");
-//		}
-//	}
 	
 	//관리자 페이지 메뉴 선택
 	public void adminPage() {
 		Boolean x = false;
 		while(!x) {
-			System.out.println("============================================= 관리자 페이지 메뉴 선택 =============================================");
+			System.out.println("=========================================== 관리자 페이지 메뉴 선택 ===========================================");
 			System.out.print(" 1.관리자 회원전체 조회");
 			System.out.print(" 2.관리자 회원 상세 조회(번호/아이디/닉네임)");
 			System.out.print(" 3.관리자 회원 강제 탈퇴");
@@ -60,38 +45,11 @@ public class ManagerController {
 			}
 		}
 	}	
-
-//	//관리자 로그인 메뉴 선택
-//	public void loginMenu() {
-//		System.out.println("===== 관리자 로그인 메뉴 선택 =====");
-//		
-//		System.out.print(" 1: 거래게시판");
-//		System.out.print(" 2: 동네생활");
-//		System.out.print(" 3: 공지사항");
-//		System.out.print(" 4: FAQ");
-//		System.out.print(" 5: QnA");
-//		System.out.print(" 6: 관리자페이지");
-//		System.out.println(" 9: 로그아웃");
-//		
-//		System.out.print("입력창 :");
-//		String num = Main.SC.nextLine();
-//		
-//		switch(num) {
-//		case "1" :trade.tradeMain(); break;
-////		case "2" :town.selectMenu(); break;
-//		case "3" :notice.selectMenu(); break; 
-//		case "4" :faq.selectMenu(); break; 
-//		case "5" :qna.selectMenu(); break;
-//		case "6" :adminPage(); break;
-//		case "9" :logoutManager(); break;
-//		default : System.out.println("잘못 입력하였습니다.");
-//		}
-//	}
 	
 	//관리자 로그인
 	public void loginManager() {
 		try {
-			System.out.println("=============================================== 관리자 로그인 ===============================================");
+			System.out.println("====== 관리자 로그인 ========================");
 			if(Main.loginManager != null) {
 				System.out.println("이미 로그인 상태입니다.");
 				return;
@@ -112,9 +70,8 @@ public class ManagerController {
 				throw new Exception();
 			}
 			System.out.println("============================================= 관리자 로그인 성공 =============================================");
-			System.out.println("                                            "+Main.loginManager.getName()+" 님 환영합니다                                            \n");
+			System.out.println("                                              "+Main.loginManager.getName()+" 님 환영합니다                                            \n");
 			
-//			managerLoginMenu();
 		}catch(Exception e) {
 			System.out.println("관리자 로그인 실패");
 			e.printStackTrace();
@@ -137,18 +94,22 @@ public class ManagerController {
 	public boolean userList() {
 		boolean x = true;
 		try {
-			System.out.println("=============================================== 회원 전체 조회 ===============================================");
+			System.out.println("================================================ 회원 전체 조회================================================");
 			//로그인 검사
 			if(Main.loginManager == null) {
 				throw new Exception("관리자 로그인부터 진행해주세요");
 			}
 			List<MemberVo> userList = service.userList();
 			
-			System.out.println("사용자번호 | 동네번호 | 사용자명 | 아이디 | 닉네임 | 이메일 | 전화번호 | 주소 | 가입일자 | 마지막수정일자 | 탈퇴여부");
+			System.out.println("번호 | 동네번호 | 사용자명 | 아이디 |  닉네임  |    이메일    |   전화번호  |        주소        |     가입일자     |  마지막수정일자  | 탈퇴여부 |");
 			for(MemberVo vo : userList) {
+				String quityn = "일반회원";
+				if(vo.getQuitYn().equals("Y")) {
+					quityn = "탈퇴회원";
+				}
 				System.out.println(vo.getMemberNo()+" | "+vo.getAreasName()+" | "+vo.getName()+" | "+vo.getId()+" | "+vo.getNick()+" | "+vo.getEmail()
-				+" | "+vo.getPhone()+" | "+vo.getAddress()+" | "+vo.getJoinDate()+" | "+vo.getEditDate()+" | "+vo.getQuitYn());
-			}			System.out.println("============================================================================================================\n");			
+				+" | "+vo.getPhone()+" | "+vo.getAddress()+" | "+vo.getJoinDate()+" | "+vo.getEditDate()+" | "+quityn+" |");
+			}			System.out.println("================================================================================================================\n");			
 			x = false;
 		}catch(Exception e) {
 			System.out.println("회원 조회 실패");
@@ -180,10 +141,14 @@ public class ManagerController {
 			
 			List<MemberVo> voList = service.userDetile(userChoice,num);
 			
+			System.out.println("번호 | 동네번호 | 사용자명 | 아이디 |  닉네임  |    이메일    |   전화번호  |        주소        |     가입일자     |  마지막수정일자  | 탈퇴여부 |");
 			for(MemberVo vo : voList) {
-				System.out.println("사용자번호 | 동네번호 | 사용자명 | 아이디 | 닉네임 | 이메일 | 전화번호 | 주소 | 가입일자 | 마지막수정일자 | 탈퇴여부");
+				String quityn = "일반회원";
+				if(vo.getQuitYn().equals("Y")) {
+					quityn = "탈퇴회원";
+				}
 				System.out.println(vo.getMemberNo()+" | "+vo.getAreasName()+" | "+vo.getName()+" | "+vo.getId()+" | "+vo.getNick()+" | "+vo.getEmail()
-				+" |  "+vo.getPhone()+"  | "+vo.getAddress()+" | "+vo.getJoinDate()+" | "+vo.getEditDate()+" | "+vo.getQuitYn());
+				+" | "+vo.getPhone()+" | "+vo.getAddress()+" | "+vo.getJoinDate()+"| "+vo.getEditDate()+"| "+quityn+" |");
 			}
 			System.out.println("============================================================================================================\n");			
 			x = false;

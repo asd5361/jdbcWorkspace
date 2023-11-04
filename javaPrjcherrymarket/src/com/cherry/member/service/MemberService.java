@@ -17,11 +17,11 @@ public class MemberService {
 		dao = new MemberDao();
 	}
 
-	public int join(MemberVo vo) throws Exception{
+	public int join(MemberVo vo) throws Exception{				// 주석 달기 : 예외 controller 로 던지는 것으로 예외 처리
 		
-		Connection conn = JDBCTemplate.getConnection();
+		Connection conn = JDBCTemplate.getConnection();			// 주석 달기 : JDBCTmeplate 클래스의 getConnection()를 통해 Connection 타입의 conn 객체를 선언
 		
-		String code = dao.codeMake(conn,vo.getAddress());
+		String code = dao.codeMake(conn,vo.getAddress());		//주석 달기 : dao 클래스의 conn 변수,Address 값을 넣은 vo변수를 담아서 codeMak() 메소드를 실행한 후 리턴값을 e문자열 타입의 code에 담기
 		if(code == null) {
 			throw new Exception("주소를 잘못 입력하셨습니다. 다시 입력해주세요");
 		}
