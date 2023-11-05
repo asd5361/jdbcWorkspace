@@ -22,21 +22,21 @@ public class MemberService {
 		Connection conn = JDBCTemplate.getConnection();			// 주석 달기 : JDBCTmeplate 클래스의 getConnection()를 통해 Connection 타입의 conn 객체를 선언
 		
 		String code = dao.codeMake(conn,vo.getAddress());		//주석 달기 : dao 클래스의 conn 변수,Address 값을 넣은 vo변수를 담아서 codeMak() 메소드를 실행한 후 리턴값을 e문자열 타입의 code에 담기
-		if(code == null) {
-			throw new Exception("주소를 잘못 입력하셨습니다. 다시 입력해주세요");
+		if(code == null) {												
+			throw new Exception("주소를 잘못 입력하셨습니다. 다시 입력해주세요");		//주석 달기 : code 변수가 null값이면 예외 발생, 주소 값에 문제가 생겼을 경
 		}
-		vo.setAreasCode(code);
-		int result = dao.join(conn,vo);
+		vo.setAreasCode(code);									//주석 달기 : vo객체의 동네코드에 code 변수 값 (회원의 주소를 이용해 찾은 동네코드) set 하기
+		int result = dao.join(conn,vo);							//주석 달기 : int result 변수에 dao 클래스의 join() 메소드 변환값 대입하기 , conn 객체와 vo 객체 매개변수로 지정
 		
-		if(result == 1) {
+		if(result == 1) {										//주석 달기 : result 값이 1이면(1일 경우 dao에서 insert가 정상 처리된 것이다.) commit진행 아니면 rollback
 			JDBCTemplate.commit(conn);
 		}else {
 			JDBCTemplate.rollback(conn);
 		}
 		
-		JDBCTemplate.close(conn);
+		JDBCTemplate.close(conn);								//주석 달기 : conn 객체 사용이 다 끝나서 close 시킴 (객체 반납)
 		
-		return result;
+		return result;											//주석 달기 : result 값 반환 (호출한 controller 한테 줌)
 	}
 
 

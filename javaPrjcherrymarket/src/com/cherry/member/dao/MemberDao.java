@@ -14,11 +14,11 @@ public class MemberDao {
 
 
 	//회원가입
-	public int join(Connection conn, MemberVo vo) throws Exception{
+	public int join(Connection conn, MemberVo vo) throws Exception{			//주석 달기 : 예외 발생 시 호출한 service 한테 던짐
 		
 		String sql = "INSERT INTO MEMBER(MEMBER_NO,AREAS_CODE,ID,PWD,NICK,NAME,EMAIL,PHONE,ADDRESS)"
-				+ "VALUES (SEQ_MEMBER.NEXTVAL,?,UPPER(?),?,?,?,?,?,?)";
-		PreparedStatement pstmt = conn.prepareStatement(sql);
+				+ "VALUES (SEQ_MEMBER.NEXTVAL,?,UPPER(?),?,?,?,?,?,?)";		//주석 달기 : sql 변수에 sql문 대입 (sql insert문 실행 )	
+		PreparedStatement pstmt = conn.prepareStatement(sql);				//주석 달기 : preparedStatement 객체를 생성해서 conn객체의 prepareStatment()메소드 실행 (sql문 담아서)
 		pstmt.setString(1, vo.getAreasCode());
 		pstmt.setString(2, vo.getId());
 		pstmt.setString(3, vo.getPwd());
@@ -26,30 +26,30 @@ public class MemberDao {
 		pstmt.setString(5, vo.getName());
 		pstmt.setString(6, vo.getEmail());
 		pstmt.setString(7, vo.getPhone());
-		pstmt.setString(8, vo.getAddress());
+		pstmt.setString(8, vo.getAddress());								//주석 달기 : psmtm객체의 setString() 메소드 실행, 각 번째의 ? 위치에 vo객체의 각 변수 대입
 		
-		int result = pstmt.executeUpdate();
-		JDBCTemplate.close(pstmt);
+		int result = pstmt.executeUpdate();									//주석 달기 : ResultSet 객체 생성해서 psmtm.excuteQuery() 메소드 실행해서 대입. sql쿼리문 출력한 테이블 호출
+		JDBCTemplate.close(pstmt);											//주석 달기 : 사용을 마친 pstmt 객체 close로 돌려주기
 		
-		return result;
+		return result;														//주석 달기 : result 변수를 반환 (호출한 service에 result 값 반환함)
 	}
 	//회원가입에 쓸 주소 -> 동네코드 추출 (예)서울시강남구신사동 -> 신사동
-	public String codeMake(Connection conn, String address) throws Exception{
-		int f = address.indexOf("구");
-		int e = address.indexOf("동");
-		String code = address.substring(f+1);
-		String sql = "SELECT AREAS_CODE FROM AREAS WHERE AREAS_NAME LIKE ?";
-		PreparedStatement pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, code);
-		ResultSet rs = pstmt.executeQuery();
-		String areasCode = null;
-		if(rs.next()) {
+	public String codeMake(Connection conn, String address) throws Exception{	//주석 달기 : 예외 발생 시 호출한 service 한테 던짐
+		int f = address.indexOf("구");											//주석 달기 : 파라미터로 받은 주소에서 '구' 가 적힌 위치 번호를 f 변수에 대입함
+		int e = address.indexOf("동");											//주석 달기 : 파차미터로 받은 주소에서 '동' 이 적힌 위치 번호 를 e 변수에 대입함
+		String code = address.substring(f+1);									//주석 달기 : 주소의 구위치 +1 부터의 문자열을 잘라서 code 변수에 대입
+		String sql = "SELECT AREAS_CODE FROM AREAS WHERE AREAS_NAME LIKE ?";	//주석 달기 : sql 변수에 sql문 대입 ( 동네코드를 주소 이름에 맞게 출력)	
+		PreparedStatement pstmt = conn.prepareStatement(sql);					//주석 달기 : preparedStatement 객체를 생성해서 conn객체의 prepareStatment()메소드 실행 (sql문 담아서)
+		pstmt.setString(1, code);												//주석 달기 : psmtm객체의 setString() 메소드 실행, 1번째 ? 위치에 code 변수 대입
+		ResultSet rs = pstmt.executeQuery();									//주석 달기 : ResultSet 객체 생성해서 psmtm.excuteQuery() 메소드 실행해서 대입. sql쿼리문 출력한 테이블 호출
+		String areasCode = null;												//주석 달기 : 동네 코드를 담을 변수를 선언하고 null값 대입 ( 값의 유무를 따질 때 null 값으로 구분하기 위해)
+		if(rs.next()) {															//주석 달기 : rs객체의 next() 실행했을 때 값이 있으면 rs객체의 getString()메소드를 실행하여 동네코드 칼럼의 값을 동네코드 변수의 대입 
 			areasCode = rs.getString("AREAS_CODE");			
 		}
-		JDBCTemplate.close(rs);
-		JDBCTemplate.close(pstmt);
+		JDBCTemplate.close(rs);													//주석 달기 : 사용을 마친 rs 객체 close로 돌려주기
+		JDBCTemplate.close(pstmt);												//주석 달기 : 사용을 마친 pstmt 객체 close로 돌려주기
 		
-		return areasCode;
+		return areasCode;														//주석 달기 : 동네코드 변수를 반환 (호출한 service에 areasCode 값 반환함)
 	}
 	//로그인
 	public MemberVo login(Connection conn, MemberVo vo) throws Exception{
